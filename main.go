@@ -8,25 +8,25 @@ import (
 	"os"
 )
 
-func encodeToPNG(m image.Image, path string) {
+func encodeToPNG(img image.Image, path string) {
 	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, 0600)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	defer f.Close()
-	png.Encode(f, m)
+	png.Encode(f, img)
 }
 
 func main() {
 	const aspectRatio = 1
-	const imgWidth = 512
+	const imgWidth = 5120
 	const imgHeight = (int)(imgWidth / aspectRatio)
 
-	m, err := Render(imgWidth, imgHeight)
+	img, err := Render(imgWidth, imgHeight)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	encodeToPNG(m, "out.png")
+	encodeToPNG(img, "out.png")
 }

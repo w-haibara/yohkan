@@ -31,7 +31,7 @@ func Render(width int, height int) (image.Image, error) {
 
 	pw := mat.NewVecDense(3, []float64{0, 0, 0})
 
-	m := image.NewRGBA(image.Rect(0, 0, width, height))
+	img := image.NewRGBA(image.Rect(0, 0, width, height))
 	bar := progressbar.Default(int64(height))
 	for y := 0; y < height; y++ {
 		bar.Add(1)
@@ -82,9 +82,9 @@ func Render(width int, height int) (image.Image, error) {
 				col = color.RGBA{gray, gray, gray, 255}
 			}
 
-			m.Set(x, y, col)
+			img.Set(x, y, col)
 		}
 	}
 
-	return m, nil
+	return img, nil
 }
