@@ -28,6 +28,12 @@ func Render(width int, height int) (image.Image, error) {
 	spherePos := mat.NewVecDense(3, []float64{0, 0, 5})
 	sphereR := 1
 	lightPos := mat.NewVecDense(3, []float64{-5, 5, -5})
+	lightIntensity := 1.0
+	ambientIntensity := 0.1
+	kAmb := 0.01
+	kDif := 0.69
+	kSpe := 0.3
+	shininess := 8.0
 
 	pw := mat.NewVecDense(3, []float64{0, 0, 0})
 
@@ -66,6 +72,8 @@ func Render(width int, height int) (image.Image, error) {
 
 			col := color.RGBA{100, 149, 237, 255}
 			if t > 0 {
+				radianceAmb := kAmb * ambientIntensity
+
 				intPos := mat.NewVecDense(3, nil)
 				intPos.AddScaledVec(eyePos, t, eyeDir)
 
@@ -78,7 +86,26 @@ func Render(width int, height int) (image.Image, error) {
 				normalization(sphereN)
 
 				nlDot := constrain(mat.Dot(sphereN, lightDir), 0, 1)
-				gray := (uint8)(255 * nlDot)
+
+				radianceDif := kDif * lightIntensity * nlDot
+
+				radianceSpe := 0.0
+				if nlDot > 0 {
+					refDir := mat.NewVecDense(3, nil)
+					refDir.ScaleVec(2*nlDot, sphereN)
+					refDir.SubVec(refDir, lightDir)
+
+					invEyeDir := mat.NewVecDense(3, nil)
+					invEyeDir.ScaleVec(-1.0, eyeDir)
+					normalization(invEyeDir)
+
+					vrDot := constrain(mat.Dot(invEyeDir, refDir), 0, 1)
+
+					radianceSpe = kSpe * lightIntensity * math.Pow(vrDot, shininess)
+				}
+
+				radiance := constrain(radianceAmb+radianceDif+radianceSpe, 0, 1)
+				gray := (uint8)(255 * radiance)
 				col = color.RGBA{gray, gray, gray, 255}
 			}
 
