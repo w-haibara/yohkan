@@ -1,4 +1,4 @@
-module github.com/w-hiabara
+module yohkan
 
 go 1.15
 

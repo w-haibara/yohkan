@@ -6,6 +6,8 @@ import (
 	"image/png"
 	"log"
 	"os"
+
+	"yohkan/renderer"
 )
 
 func encodeToPNG(img image.Image, path string) {
@@ -23,7 +25,7 @@ func main() {
 	const imgWidth = 5120
 	const imgHeight = (int)(imgWidth / aspectRatio)
 
-	img, err := Render(imgWidth, imgHeight)
+	img, err := renderer.Render(imgWidth, imgHeight)
 	if err != nil {
 		log.Fatal(err)
 	}
