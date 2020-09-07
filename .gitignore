@@ -1,6 +1,6 @@
 yohkan
-out.png
-callvis.*
+*.png
+*.gv
 
 # Binaries for programs and plugins
 *.exe
